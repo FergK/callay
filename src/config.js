@@ -29,6 +29,7 @@ Config.prototype.resetToDefaults = function() {
     this.video = {};
     this.video.enableAntiAliasing = true;
     
-    this.world = {};
-    this.world.clearColor = 0x000000;//0x82aef3;
+    this.viewport = {};
+    this.viewport.clearColor = 0x000000;//0x82aef3;
+
 };

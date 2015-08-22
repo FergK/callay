@@ -72,7 +72,7 @@ function FreeCamera() {
 
     theScene.add(this.camera);
     
-    this.moveSpeed = 25; // meters per second
+    this.moveSpeed = 100;//25; // meters per second
     this.turnSpeed = Math.PI / 2; // radians per second
     this.zoomSpeed = 50;
 

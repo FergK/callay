@@ -724,37 +724,17 @@ KeyboardControls.prototype.onKeyUp = function( event ) {
 // for each key that is currently pressed. This prevents the annoying situation
 // where if the window loses focus while a key is held down it stays "held down"
 // in the code until the actual key is pressed again.
-
-// TODO
-// I need to take another look at this, I'm not sure if this is right way to fix the problem
 KeyboardControls.prototype.onChangeVisibility = function( event ) {
   
     if ( !document.hidden ) { 
-        console.log("changed not hidden");
-        return; } // Didn't lose focus, don't do anything
-    
-        console.log("hidden!!!!!!");
-    // var self = this;
-    
-    // for ( var keyCode in this.keyBinds ) {
-    //     // Loop through each of the keybinds
-    //     // It will know it if is pressed or not and what functions to call.
-    //     self.keyBinds[keyCode].onKeyUp();
-    // }
-    
-    // // this.keys.forEach( 
-    // //     function( value, index, array ) { 
-    // //         if ( value !== false ) { 
-    // //         this.onKeyUp( { "keyCode":index } );
-    // //         }
-    // //     },
-    // //     self
-    // // );
+         // Didn't lose focus, don't do anything
+        return;
+    }
     
     for ( var keyCode in this.keyBinds ) {
         // Loop through each of the keybinds
         // It will know it if is pressed or not and what functions to call.
-        this.keyBinds[keyCode].update();
+        this.keyBinds[keyCode].onKeyUp();
     }
   
 };
