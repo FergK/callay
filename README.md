@@ -1,19 +1,21 @@
 # Callay
 
+## [Latest Working Version](http://fergk.github.io/callay/)
+
 [GitHub](https://github.com/FergK/callay)
 
-An experiment with [ThreeJS](#threejs). I don't know what this is yet.
+An experiment with [ThreeJS](https://github.com/mrdoob/three.js/). I don't know what this is yet.
 
 #### Goals
 
-##### [Version 000](http://fergk.com/callay/000/000index.html)
+##### Version 000
 
 - **Rendering framework**
   - [x] Viewport
   - [x] Rendering loop
   - [x] Cuboidal geometry
 
-##### [Version 001](http://fergk.com/callay/001/001index.html)
+##### Version 001
 
 - **Cameras**
   - [x] Perspective camera with free movement
@@ -32,16 +34,16 @@ An experiment with [ThreeJS](#threejs). I don't know what this is yet.
   - [ ] FPS display
   - [ ] Information about controls
   - [ ] Browser feature error messages (WebGL, pointer lock, gamepad, etc...)
-  - [ ] De-uglify fonts
 - **Interaction**
   - [ ] User alterable geometry and geometry color
 - [x] Smoothed geometry option
 - [x] Pseudo-infinite terrain
-- [x] Get rid of versioning in files and use git properly (maybe?)
+- [x] Get rid of versioning in files and use git properly
 - [ ] Clean up the main file
 
 ##### Future
 - [ ] Collision detection with terrain
+- [ ] Set up on github.io
 
 ##### TODOs
 - Pointer lock is broken in firefox
