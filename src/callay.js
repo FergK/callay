@@ -4,6 +4,9 @@
 
 /* global THREE requestAnimationFrame theAnimationRequest  Config Viewport FreeCamera OrthoCamera KeyboardControls MouseControls GamepadControls Controls*/
 
+const CALLAY_VERSION = "002";
+document.title = "Callay v" + CALLAY_VERSION;
+
 // Definining reusable global constants
 const ORIGIN = new THREE.Vector3( 0, 0, 0 );
 const X_AXIS = new THREE.Vector3( 1, 0, 0 );
@@ -110,13 +113,8 @@ function render() {
     
     theCamera.update();
     
-    //   theWorld.rotation.z += 0.005;
-    //   if ( theWorld.rotation.z > ( Math.PI * 2 ) ) { theWorld.rotation.z = 0 };
-    
     theViewport.renderer.render( theScene, theCamera.camera );
 
 }
 
 render();
-
-// https://preview.c9.io/fergk/callay/001/001index.html?_c9_id=livepreview0&_c9_host=https://ide.c9.io
