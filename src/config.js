@@ -20,7 +20,7 @@ Config.prototype.resetToDefaults = function() {
     this.gamepad.buttonThreshold = 0.5;
     
     this.gameplay = {};
-    this.gameplay.FOV = 65;
+    this.gameplay.FOV = 55;
     
     this.mouse = {};
     this.mouse.lookSensitivity = 1;
@@ -30,6 +30,7 @@ Config.prototype.resetToDefaults = function() {
     this.video.enableAntiAliasing = true;
     
     this.viewport = {};
-    this.viewport.clearColor = 0x000000;//0x82aef3;
+    // this.viewport.clearColor = 0x82aef3; // Sky
+    this.viewport.clearColor = 0x000000; // Black
 
 };

@@ -29,21 +29,27 @@ An experiment with [ThreeJS](https://github.com/mrdoob/three.js/). I don't know 
 
 ##### Version 002
 
+- **Boring Stuff**
+- [x] Get rid of versioning in files and use git properly
+- [ ] Clean up the main file
 - **Basic UI**
   - [ ] Introduction
   - [ ] FPS display
   - [ ] Information about controls
   - [ ] Browser feature error messages (WebGL, pointer lock, gamepad, etc...)
+  - [ ] Simple options (half-size rendering)
 - **Interaction**
+  - [x] Rudimentary first person camera
+  - [x] Player object with terrain collision detection
   - [ ] User alterable geometry and geometry color
 - [x] Smoothed geometry option
 - [x] Pseudo-infinite terrain
-- [x] Get rid of versioning in files and use git properly
-- [ ] Clean up the main file
+- [x] Set up on github.io: fergk.github.io/callay
+
 
 ##### Future
-- [ ] Collision detection with terrain
-- [ ] Set up on github.io
+- [ ] Write a custom shader for the terrain (basic lighting / fog)
+- [ ] Look into switching terrain generation from classic Perlin to simplex noise
 
 ##### TODOs
 - Pointer lock is broken in firefox
