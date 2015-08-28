@@ -56,9 +56,9 @@ Viewport.prototype.setupEventHandlers = function() {
     var self = this;
 
     window.addEventListener(
-            'resize',
-            function () { self.resize( window.innerWidth, window.innerHeight ); },
-            false
+        'resize',
+        function () { self.resize( window.innerWidth, window.innerHeight ); },
+        false
     );
 
 };
