@@ -1,11 +1,14 @@
-/* global THREE Z_AXIS_NEG theScene */
+/* global THREE Z_AXIS_NEG Z_AXIS EPSILON theScene theTimeDelta theConfig */
 
 function Player () {
 
+    THREE.Object3D.call( this );
+
+	this.type = 'Player';
+
     this.size = new THREE.Vector3( 0.9, 0.9, 1.8 );
-    this.position = new THREE.Vector3( 2, 1, 10 );
-    this.rotation = new THREE.Euler( 0, 0, 0, 'ZYX' );
-    this.quaternion = new THREE.Quaternion().setFromEuler( this.rotation );
+    this.position.set( 2, 1, 100 );
+    this.rotation.set( 0, 0, 0, 'ZYX' );
     
     // this.mesh = new THREE.Mesh(
     //     new THREE.SphereGeometry( 0.5, 32, 32 ),
@@ -23,58 +26,27 @@ function Player () {
     
     this.raycaster = new THREE.Raycaster();
     this.intersects = {};
-    
-    this.spinner = 0;
-    
-    this.ints = [];
 
 }
+
+Player.prototype = Object.create( THREE.Object3D.prototype );
 Player.prototype.constructor = Player; 
 
 Player.prototype.update = function () {
-    
-    
-    // this.spinner += 0.5 * theTimeDelta;
-    // this.position.x = Math.cos( this.spinner ) * 20;
-    // this.position.y = Math.sin( this.spinner ) * 20;
-    
-    var rayOrigin = new THREE.Vector3( 0, 0, 10 ).add( this.position );
+
+    var rayOrigin = new THREE.Vector3( 0, 0, ( this.size.z / 2 ) + EPSILON ).add( this.position );
     
     this.raycaster.set( rayOrigin, Z_AXIS_NEG );
     this.intersects = this.raycaster.intersectObjects( theScene.children );
-    
-    // console.log( this.mesh.id );
-    
-    // for( var i = 0; i < this.intersects.length; i++ ) {
-    //     if ( this.intersects[i].object.id === this.mesh.id ) {
-    //         continue;
-    //     } else {
-    //         console.log( this.intersects[i].object.id );
-    //         // this.position.z = this.intersects[0].point.z + ( this.size.z / 2 );
-    //         break;
-    //     }
-    // }
-    
     
     if ( this.intersects.length > 0 ) {
         this.position.z = this.intersects[0].point.z + ( this.size.z / 2 );
     }
     
-    // this.mesh.position.copy( this.position );
-    // this.mesh.rotation.set( 0, 0, this.rotation.z );
-    this.quaternion.setFromEuler( this.rotation );
-    
 };
 
 // Move ========================================================================
 Player.prototype.move = function( moveVector ) {
-    
-    // moveVector.applyQuaternion( ROT_ZY );
-    // moveVector.applyQuaternion( this.quaternion );
-    
-    // moveVector.multiplyScalar( this.moveSpeed * theTimeDelta );
-    
-    // this.position.add( moveVector );
     
     moveVector.applyAxisAngle( Z_AXIS, this.rotation.z );
     moveVector.multiplyScalar( this.moveSpeed * theTimeDelta );
