@@ -25,6 +25,7 @@ const ROT_YZ = new THREE.Quaternion().setFromUnitVectors( Y_AXIS, Z_AXIS );
 const ROT_ZX = new THREE.Quaternion().setFromUnitVectors( Z_AXIS, X_AXIS );
 const ROT_ZY = new THREE.Quaternion().setFromUnitVectors( Z_AXIS, Y_AXIS );
 const BLACK = new THREE.Color( 0x000000 );
+const EPSILON = 0.0001
 
 var theTimer = new THREE.Clock( true );
 var theTimeDelta, theFrameRate;
@@ -38,15 +39,18 @@ var theViewport = new Viewport( "viewport", theConfig.video.enableAntiAliasing, 
 // World =======================================================================
 
 var theWorld = new World();
-theWorld.buildChunkAndNeighbors( 0, 0, 10 );
+theWorld.buildChunkAndNeighbors( 0, 0, 1 );
 
-var axisHelper = new THREE.AxisHelper( 2 );
-axisHelper.position.set( 0, 0, 3 );
-theScene.add( axisHelper );
+// console.log( theWorld.chunks[0][0] );
+
+// var axisHelper = new THREE.AxisHelper( 2 );
+// axisHelper.position.set( 0, 0, 3 );
+// theScene.add( axisHelper );
 
 var thePlayer = new Player();
 
-
+// var anEntity = new Entity( new THREE.Vector3(0, -5, 10 ) );
+// var aPip = new Pip( new THREE.Vector3( -5, 0, 5 ) );
 
 
 // Cameras =====================================================================
@@ -97,7 +101,6 @@ var pointInWorld = function( event ) {
 
 // var theMouseControls = new MouseControls();
 // theMouseControls.addButtonBind( 2, function(){ theMouseControls.requestPointerLock( theViewport.renderer.domElement ) }, null, null, null, null );
-// theMouseControls.addMoveBind( function( event ){ pointInWorld( event ) } ); 
 // theMouseControls.addWheelBind( function( event ){ theCamera.zoom( event.deltaY / Math.abs( event.deltaY ) ) } );
 // theMouseControls.addPointerBind( function( event ){ theCamera.mouseLook( event ) } );
 
@@ -135,6 +138,8 @@ function render() {
     
     theWorld.buildChunkAndNeighbors( Math.round( theCamera.camera.position.x / theWorld.chunkSize ), Math.round( theCamera.camera.position.y / theWorld.chunkSize ), 7 );
     theWorld.buildChunksInView( theCamera.camera, 9 );
+    
+    // aPip.update();
     
     thePlayer.update();
     

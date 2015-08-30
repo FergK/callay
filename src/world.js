@@ -1,4 +1,4 @@
-/* global THREE ImprovedNoise theConfig */
+/* global THREE ImprovedNoise SimplexNoise theConfig */
 
 // =============================================================================
 // WORLD =======================================================================
@@ -14,9 +14,9 @@ function World() {
     this.seed = 0; // Math.random() * 100;
     
     this.chunkSize = 16;
-    this.maxHeight = 32;
-    this.minOctive = 1;
-    this.maxOctive = 7;
+    this.maxHeight = 48;
+    this.minOctive = 5;
+    this.maxOctive = 8;
     
     this.maxScale = 0;
     for ( var octive = this.minOctive; octive <= this.maxOctive; octive++ ) {
@@ -28,21 +28,22 @@ function World() {
     // we need to offset the origin for noise generation.
     // These are just temporary values
     this.noiseOffset = {};
-    this.noiseOffset.x = 65536; 
-    this.noiseOffset.y = 65536;
+    this.noiseOffset.x = 0;//524288; 
+    this.noiseOffset.y = 0;//524288;
     
     this.smoothTerrain = true;
     
     this.color = {};
-    this.color.midpoint = 0.3;
+    this.color.midpoint = 0.4;
     
-    // this.color.high = new THREE.Color("rgb(255, 255, 255)"); // Dream clouds
-    // this.color.mid = new THREE.Color("rgb(255,128,128)"); 
-    // this.color.low = new THREE.Color("rgb(0,128,255)");//rgb(130, 174, 243)");
+    this.color.high = new THREE.Color("rgb(255, 255, 255)"); // Dream clouds
+    this.color.mid = new THREE.Color("rgb(255,128,128)"); 
+    this.color.low = new THREE.Color("rgb(0,128,255)");//rgb(130, 174, 243)");
+    this.color.midpoint = 0.6;
     
-    this.color.high = new THREE.Color("rgb(154, 181, 74)"); // Grass
-    this.color.low = new THREE.Color("rgb(69, 92, 0)");
-    this.color.mid = new THREE.Color().copy( this.color.high ).lerp( this.color.low, 0.2 );
+    // this.color.high = new THREE.Color("rgb(154, 181, 74)"); // Grass
+    // this.color.low = new THREE.Color("rgb(69, 92, 0)");
+    // this.color.mid = new THREE.Color().copy( this.color.high ).lerp( this.color.low, 0.2 );
     
     // this.color.high = new THREE.Color("rgb(255, 0, 0)"); // RGB
     // this.color.mid = new THREE.Color("rgb(0, 255, 0)");
@@ -50,24 +51,31 @@ function World() {
     // this.color.midpoint = 0.3;
     
     // this.color.high = new THREE.Color("rgb(255,255,255)"); // Tinted greyscale
-    // this.color.low = new THREE.Color("rgb(50,50,50)");
-    // this.color.low.r += THREE.Math.randFloat( 0, 0.1 );
-    // this.color.low.g += THREE.Math.randFloat( 0, 0.1 );
-    // this.color.low.b += THREE.Math.randFloat( 0, 0.1 );
+    // this.color.low = new THREE.Color("rgb(255,255,255)");
+    // // this.color.low.r += THREE.Math.randFloat( 0, 0.1 );
+    // // this.color.low.g += THREE.Math.randFloat( 0, 0.1 );
+    // // this.color.low.b += THREE.Math.randFloat( 0, 0.1 );
     // this.color.mid = new THREE.Color().copy( this.color.high ).lerp( this.color.low, 0.5 );
     
-    this.noise = new ImprovedNoise();
+    this.simplex = new SimplexNoise();
     
     this.chunks = [];
     
-    // var directionalLight = new THREE.DirectionalLight( 0xFFFFFF, 0.5 );
-    // directionalLight.position.set( 1, 0, 0 ).normalize();
+    this.entities = {};
+    
+    var directionalLight = new THREE.DirectionalLight( 0xFFFFFF, 1 );
+    directionalLight.position.set( 1, 1, 1 );
+    theScene.add( directionalLight );
+    
+    // var directionalLight = new THREE.DirectionalLight( 0x0000FF, 1 );
+    // directionalLight.position.set( -1, -1, 0 );
     // theScene.add( directionalLight );
     
     // theScene.fog = new THREE.Fog( 0x000000, 75, 125 );
     
-    var ambientLight = new THREE.AmbientLight( 0xFFFFFF );
-	theScene.add( ambientLight );
+    // var ambientLight = new THREE.AmbientLight( 0xFFFFFF );
+//     var ambientLight = new THREE.AmbientLight( 0x666666 );
+// 	theScene.add( ambientLight );
     
 }
 World.prototype.constructor = World;
@@ -78,25 +86,28 @@ World.prototype.buildChunk = function ( chunkX, chunkY ) {
     
     // var startTime = theTimer.getElapsedTime();
     // console.log("Building chunk " + chunkX + " " + chunkY );
+    var start = -1;
+    var end = this.chunkSize + 2;
     
     // Initialize heightMap and populate with properly sized empty arrays
     var heightMap = [];
-    for( var i = -1; i <= this.chunkSize + 1; i++ ) {
+    for( var i = start; i <= end; i++ ) {
         heightMap[i] = [];
-        for( var j = -1; j < this.chunkSize + 1; j++ ) {
+        for( var j = start; j < end; j++ ) {
             heightMap[i][j] = 0;
         }
     }
     
     // Use the perlin noise to generate the raw noise
     for ( var octive = this.minOctive; octive <= this.maxOctive; octive+=1 ) {
-        for ( i = -1; i < this.chunkSize + 1; i++ ) {
-            for ( j = -1; j < this.chunkSize + 1; j++ ) {
+        for ( i = start; i < end; i++ ) {
+            for ( j = start; j < end; j++ ) {
                 
                 var scaling = Math.pow( 2, octive );
-                var noiseX = ( i + this.noiseOffset.x + ( chunkY * this.chunkSize ) ) / scaling;
-                var noiseY = ( j + this.noiseOffset.y + ( chunkX * this.chunkSize ) ) / scaling;
-                heightMap[i][j] += ( Math.abs( this.noise.noise( noiseX, noiseY, this.seed ) ) * ( scaling ) );
+                var noiseX = ( i + this.noiseOffset.x + ( chunkX * this.chunkSize ) ) / scaling;
+                var noiseY = ( j + this.noiseOffset.y + ( chunkY * this.chunkSize ) ) / scaling;
+                // heightMap[i][j] += ( Math.abs( this.perlin.noise( noiseX, noiseY, this.seed ) ) * ( scaling ) );
+                heightMap[i][j] += ( ( this.simplex.noise2D( noiseX, noiseY ) + 1 ) * scaling / 2 );
                 
             }
         }
@@ -105,11 +116,11 @@ World.prototype.buildChunk = function ( chunkX, chunkY ) {
     // Normalize the values from 0 to maxheight
     // And while we're at it generate a colormap based on the heightmap
     var colorMap = [];
-    for( i = -1; i <= this.chunkSize + 1; i++ ) {
+    for( i = start; i <= end; i++ ) {
         
         colorMap[i] = [];
         
-        for( j = -1; j < this.chunkSize + 1; j++ ) {
+        for( j = start; j < end; j++ ) {
             heightMap[i][j] *= ( this.maxHeight / this.maxScale );
             
             var scale = ( heightMap[i][j] / this.maxHeight );
@@ -123,9 +134,6 @@ World.prototype.buildChunk = function ( chunkX, chunkY ) {
     }
     
     var newChunk = {};
-    
-    // newChunk.heightMap = heightMap;
-    // newChunk.colorMap = colorMap;
     
     if ( this.smoothTerrain ) {
         newChunk.mesh = this.makeSmoothChunkGeometry( heightMap, colorMap, chunkX, chunkY );
@@ -195,68 +203,304 @@ World.prototype.buildChunksInView = function( camera, radius ) {
 
 World.prototype.makeSmoothChunkGeometry = function( heightMap, colorMap, chunkX, chunkY ) {
     
-    var cornerMap = [];
-    var cornerColors = [];
-    for( var i = 0; i <= this.chunkSize; i++ ) {
-        cornerMap[i] = [];
-        cornerColors[i] = [];
-        for( var j = 0; j <= this.chunkSize; j++ ) {
-            
-            cornerMap[i][j] = ( heightMap[i][j] + heightMap[i-1][j-1] ) / 2;
-            cornerColors[i][j] = new THREE.Color().copy( colorMap[i][j] ).lerp( colorMap[i-1][j-1], 0.5 );
-
-        }
-    }
-    
-    // TODO Optimize this loop further. At the moment it does duplicate work by
-    // creating overlapping vertices that are just merged later
     var chunkGeometry = new THREE.Geometry();
-    for( i = 0; i < this.chunkSize; i++ ) {
-        for( j = 0; j < this.chunkSize; j++ ) {
-            
-            var k = ( i * this.chunkSize ) + j;
-            
+    var face = 0;
+    var vert = 0;
+    var vertexNormals = [];
+    for( var i = 0; i <= this.chunkSize; i++ ) {
+        for( var j = 0; j <= this.chunkSize; j++ ) {
+
             chunkGeometry.vertices.push(
-                new THREE.Vector3( -0.5 + j,  0.5 + i, cornerMap[i+1][j] ),  // top NW 0
-                new THREE.Vector3( -0.5 + j, -0.5 + i, cornerMap[i][j] ), // top SW 1
-                new THREE.Vector3(  0.5 + j, -0.5 + i, cornerMap[i][j+1] ),  // top SE 2
-                new THREE.Vector3(  0.5 + j,  0.5 + i, cornerMap[i+1][j+1] ) // top NE 3
+                new THREE.Vector3( i, j, heightMap[i][j] )
             );
+            vertexNormals.push( new THREE.Vector3() );
+
+            if ( ( i > 0 ) && ( j > 0 ) ) {
+                
+                chunkGeometry.faces.push(
+                    new THREE.Face3( vert, vert - this.chunkSize - 2, vert - 1 ),
+                    new THREE.Face3( vert, vert - this.chunkSize - 1, vert - this.chunkSize - 2 )
+                );
+                
+                // Add the vertex colors
+                chunkGeometry.faces[face].vertexColors = [
+                    colorMap[i][j], 
+                    colorMap[i-1][j-1],
+                    colorMap[i][j-1]
+                ];
+                
+                chunkGeometry.faces[face+1].vertexColors = [
+                    colorMap[i][j],
+                    colorMap[i-1][j],
+                    colorMap[i-1][j-1]
+                ];
+                
+                // Generate the face normals
+                for ( var f = face; f <= face+1; f++ ) {
+        
+        			var vA = chunkGeometry.vertices[ chunkGeometry.faces[f].a ];
+        			var vB = chunkGeometry.vertices[ chunkGeometry.faces[f].b ];
+        			var vC = chunkGeometry.vertices[ chunkGeometry.faces[f].c ];
+        
+        			var cb = new THREE.Vector3().subVectors( vC, vB );
+        			var ab = new THREE.Vector3().subVectors( vA, vB );
+        			cb.cross( ab );
+        			cb.normalize();
+        			chunkGeometry.faces[f].normal.copy( cb );
+        			
+        			vertexNormals[ chunkGeometry.faces[f].a ].add( cb );
+        			vertexNormals[ chunkGeometry.faces[f].b ].add( cb );
+        			vertexNormals[ chunkGeometry.faces[f].c ].add( cb );
+        
+        		}
+                
+                face += 2;
+            }
             
-            chunkGeometry.faces.push(
-                new THREE.Face3( (k*4), (k*4) + 1, (k*4) + 2 ),
-                new THREE.Face3( (k*4), (k*4) + 2, (k*4) + 3 )
-            );
-            
-            chunkGeometry.faces[(k*2)].vertexColors[0] = cornerColors[i+1][j];
-            chunkGeometry.faces[(k*2)].vertexColors[1] = cornerColors[i][j];
-            chunkGeometry.faces[(k*2)].vertexColors[2] = cornerColors[i][j+1];
-            
-            chunkGeometry.faces[(k*2)+1].vertexColors[0] = cornerColors[i+1][j];
-            chunkGeometry.faces[(k*2)+1].vertexColors[1] = cornerColors[i][j+1];
-            chunkGeometry.faces[(k*2)+1].vertexColors[2] = cornerColors[i+1][j+1];
-            
+            vert++;
         }
     }
     
-    chunkGeometry.mergeVertices();
-    chunkGeometry.computeFaceNormals();
-    chunkGeometry.computeVertexNormals();
+    // Fix the edge vertex normals to prevent lighting errors
+    vert = 0;
+    for( i = 0; i <= this.chunkSize; i++ ) {
+        for( j = 0; j <= this.chunkSize; j++ ) {
+            
+            var tf = new THREE.Plane();
+            
+            if ( ( i === 0 ) && ( j === 0 ) ) { // CHECK
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i, j+1, heightMap[i][j+1] ),
+                    new THREE.Vector3( i-1, j, heightMap[i-1][j] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i-1, j, heightMap[i-1][j] ),
+                    new THREE.Vector3( i-1, j-1, heightMap[i-1][j-1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i-1, j-1, heightMap[i-1][j-1] ),
+                    new THREE.Vector3( i, j-1, heightMap[i][j-1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i, j-1, heightMap[i][j-1] ),
+                    new THREE.Vector3( i+1, j, heightMap[i+1][j] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                
+            } else if ( ( i === 0 ) && ( j === this.chunkSize ) ) { // CHECK ?!?!?!?!?!
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i, j+1, heightMap[i][j+1] ),
+                    new THREE.Vector3( i-1, j, heightMap[i-1][j] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i-1, j, heightMap[i-1][j] ),
+                    new THREE.Vector3( i-1, j-1, heightMap[i-1][j-1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i-1, j-1, heightMap[i-1][j-1] ),
+                    new THREE.Vector3( i, j-1, heightMap[i][j-1] )
+                );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i+1, j+1, heightMap[i+1][j+1] ),
+                    new THREE.Vector3( i, j+1, heightMap[i][j+1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i+1, j, heightMap[i+1][j] ),
+                    new THREE.Vector3( i+1, j+1, heightMap[i+1][j+1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                
+            } else if ( ( i === this.chunkSize ) && ( j === this.chunkSize ) ) { // CHECK!
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i+1, j+1, heightMap[i+1][j+1] ),
+                    new THREE.Vector3( i, j+1, heightMap[i][j+1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i+1, j, heightMap[i+1][j] ),
+                    new THREE.Vector3( i+1, j+1, heightMap[i+1][j+1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i, j-1, heightMap[i][j-1] ),
+                    new THREE.Vector3( i+1, j, heightMap[i+1][j] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i, j+1, heightMap[i][j+1] ),
+                    new THREE.Vector3( i-1, j, heightMap[i-1][j] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                
+            } else if ( ( i === this.chunkSize ) && ( j === 0 ) ) {
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i+1, j+1, heightMap[i+1][j+1] ),
+                    new THREE.Vector3( i, j+1, heightMap[i][j+1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i+1, j, heightMap[i+1][j] ),
+                    new THREE.Vector3( i+1, j+1, heightMap[i+1][j+1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i, j-1, heightMap[i][j-1] ),
+                    new THREE.Vector3( i+1, j, heightMap[i+1][j] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i-1, j, heightMap[i-1][j] ),
+                    new THREE.Vector3( i-1, j-1, heightMap[i-1][j-1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i-1, j-1, heightMap[i-1][j-1] ),
+                    new THREE.Vector3( i, j-1, heightMap[i][j-1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+            
+                
+            } else if ( ( i === 0 ) ) { // CHECK!
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i, j+1, heightMap[i][j+1] ),
+                    new THREE.Vector3( i-1, j, heightMap[i-1][j] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i-1, j, heightMap[i-1][j] ),
+                    new THREE.Vector3( i-1, j-1, heightMap[i-1][j-1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i-1, j-1, heightMap[i-1][j-1] ),
+                    new THREE.Vector3( i, j-1, heightMap[i][j-1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                
+            } else if ( i === this.chunkSize ) { // CHECK!
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i+1, j+1, heightMap[i+1][j+1] ),
+                    new THREE.Vector3( i, j+1, heightMap[i][j+1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i+1, j, heightMap[i+1][j] ),
+                    new THREE.Vector3( i+1, j+1, heightMap[i+1][j+1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i, j-1, heightMap[i][j-1] ),
+                    new THREE.Vector3( i+1, j, heightMap[i+1][j] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                
+            } else if ( j === 0 ) { // CHECK!
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i-1, j, heightMap[i-1][j] ),
+                    new THREE.Vector3( i-1, j-1, heightMap[i-1][j-1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i-1, j-1, heightMap[i-1][j-1] ),
+                    new THREE.Vector3( i, j-1, heightMap[i][j-1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i, j-1, heightMap[i][j-1] ),
+                    new THREE.Vector3( i+1, j, heightMap[i+1][j] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                
+            } else if ( j === this.chunkSize ) { // CHECK!
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i, j+1, heightMap[i][j+1] ),
+                    new THREE.Vector3( i-1, j, heightMap[i-1][j] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i+1, j+1, heightMap[i+1][j+1] ),
+                    new THREE.Vector3( i, j+1, heightMap[i][j+1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+                tf.setFromCoplanarPoints(
+                    new THREE.Vector3( i, j, heightMap[i][j] ),
+                    new THREE.Vector3( i+1, j, heightMap[i+1][j] ),
+                    new THREE.Vector3( i+1, j+1, heightMap[i+1][j+1] )
+                );
+                vertexNormals[ vert ].add( tf.normal );
+            }
+            
+            vert++;
+        }
+    }
+    
+    // Apply the vertex normals
+    for ( var f = 0; f < chunkGeometry.faces.length; f++ ) {
+        face = chunkGeometry.faces[ f ];
+        face.vertexNormals[ 0 ] = vertexNormals[ face.a ].normalize().clone();
+		face.vertexNormals[ 1 ] = vertexNormals[ face.b ].normalize().clone();
+		face.vertexNormals[ 2 ] = vertexNormals[ face.c ].normalize().clone();
+    }
+    
+    
     
     var chunkMesh = new THREE.Mesh(
         chunkGeometry,
+        // new THREE.MeshBasicMaterial( {
         new THREE.MeshLambertMaterial( {
             color: 0xFFFFFF,
             vertexColors: THREE.VertexColors,
-            shading: THREE.FlatShading,
+            // shading: THREE.Flathading,
+            shading: THREE.SmoothShading,
             wireframe: false,
             wrapAround: false,
             transparent: false,
             opacity: 0.75
         } )
+        // new THREE.MeshNormalMaterial()
     );
     
     chunkMesh.position.add( new THREE.Vector3( ( chunkX * this.chunkSize ), ( chunkY * this.chunkSize ), 0 ) );
+    
+    // var faceNormHelper = new THREE.FaceNormalsHelper( chunkMesh, 2, 0xff00ff, 1 );
+    // theScene.add( faceNormHelper );
+    // var vertNormHelper = new THREE.VertexNormalsHelper( chunkMesh, 2, 0xff00ff, 1 );
+    // theScene.add( vertNormHelper );
     
     return chunkMesh;
     
