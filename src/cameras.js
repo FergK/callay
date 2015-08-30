@@ -238,7 +238,7 @@ OrthoCamera.prototype.update = function () {};
 
 OrthoCamera.prototype.initialize = function () {
     
-    this.setScale( 10 );
+    this.setScale( 20 );//10
     this.camera.position.set( 0, 0, 0 );
     this.camera.rotation.z = -Math.PI / 4;
     this.camera.rotation.x = Math.atan( 1 / Math.sqrt( 2 ) );

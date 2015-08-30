@@ -42,14 +42,14 @@ An experiment with [ThreeJS](https://github.com/mrdoob/three.js/). I don't know 
   - [x] Rudimentary first person camera
   - [x] Player object with terrain collision detection
   - [ ] User alterable geometry and geometry color
-- [x] Smoothed geometry option
-- [x] Pseudo-infinite terrain
-- [x] Set up on github.io: fergk.github.io/callay
+- [x] Smoothed geometry option with appropriate normals for lighting
+- [x] Pseudo-infinite terrain generation using simplex noise
+- [x] Set up on github.io: [fergk.github.io/callay](http://fergk.github.io/callay/)
+- [x] Added [Logify.js](http://futurecensus.github.io/logify.js/) to aid with debugging
 
 
 ##### Future
 - [ ] Write a custom shader for the terrain (basic lighting / fog)
-- [ ] Look into switching terrain generation from classic Perlin to simplex noise
 
 ##### TODOs
 - Pointer lock is broken in firefox
