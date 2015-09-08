@@ -49,7 +49,13 @@ FirstPersonCamera.prototype.update = function() {
 
 };
 
-FirstPersonCamera.prototype.resize = function () {};
+// Resize ======================================================================
+FirstPersonCamera.prototype.resize = function () {
+
+    this.camera.aspect = theViewport.width / theViewport.height;
+    this.camera.updateProjectionMatrix();
+    
+};
 
 
 
