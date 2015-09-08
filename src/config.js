@@ -1,7 +1,7 @@
 /* global THREE */
 
 // =============================================================================
-// CONFIG =======================================================================
+// CONFIG ======================================================================
 // =============================================================================
 // Class for saving and restoring configuration values
 
@@ -28,6 +28,7 @@ Config.prototype.resetToDefaults = function() {
     
     this.video = {};
     this.video.enableAntiAliasing = true;
+    this.video.resolutionMultiplier = 1;
     
     this.viewport = {};
     // this.viewport.clearColor = 0x82aef3; // Sky

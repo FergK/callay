@@ -39,8 +39,7 @@ var theViewport = new Viewport( "viewport", theConfig.video.enableAntiAliasing, 
 // World =======================================================================
 
 var theWorld = new World();
-theWorld.buildChunkAndNeighbors( 0, 0, 1 );
-
+theWorld.buildChunkAndNeighbors( 0, 0, 15 );
 // console.log( theWorld.chunks[0][0] );
 
 // var axisHelper = new THREE.AxisHelper( 2 );
@@ -118,6 +117,7 @@ theKeyboardControls.addKeyBind( 'w', null, null, function(){ thePlayer.move( new
 theKeyboardControls.addKeyBind( 'a', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( X_AXIS_NEG ) ) }, null, null );
 theKeyboardControls.addKeyBind( 's', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( Y_AXIS_NEG ) ) }, null, null );
 theKeyboardControls.addKeyBind( 'd', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( X_AXIS ) ) }, null, null );
+theKeyboardControls.addKeyBind( 'p', null, null, function(){ cancelAnimationFrame( theAnimationRequest );  }, null, null );
 
 var theMouseControls = new MouseControls();
 theMouseControls.addButtonBind( 2, function(){ theMouseControls.requestPointerLock( theViewport.renderer.domElement ) }, null, null, null, null );
@@ -135,15 +135,14 @@ function render() {
     theTimeDeltaAverage = theTimeDeltaAverage * 0.95 + theTimeDelta * 0.05;
     theFrameRate = ( 1 / theTimeDeltaAverage ).toFixed(0);
     theFrameCount++;
+
+    theWorld.manageChunks( theCamera.camera, 16, 7, 9 );
     
-    theWorld.buildChunkAndNeighbors( Math.round( theCamera.camera.position.x / theWorld.chunkSize ), Math.round( theCamera.camera.position.y / theWorld.chunkSize ), 7 );
-    theWorld.buildChunksInView( theCamera.camera, 9 );
+    theControls.update();
     
     // aPip.update();
     
     thePlayer.update();
-    
-    theControls.update();
     
     theCamera.update();
     

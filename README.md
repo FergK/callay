@@ -1,5 +1,7 @@
 # Callay
 
+![Callay Screenshot](http://fergk.github.io/callay/screenshot.png)
+
 ## [Latest Working Version](http://fergk.github.io/callay/)
 
 [GitHub](https://github.com/FergK/callay)
@@ -49,7 +51,7 @@ An experiment with [ThreeJS](https://github.com/mrdoob/three.js/). I don't know 
 
 
 ##### Future
-- [ ] Write a custom shader for the terrain (basic lighting / fog)
+- [ ] Look into using typed arrays and BufferGeometry for performance
 
 ##### TODOs
 - Pointer lock is broken in firefox
