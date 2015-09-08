@@ -1,4 +1,4 @@
-/* global THREE theCamera */
+/* global THREE theCamera theConfig*/
 
 // =============================================================================
 // VIEWPORT ====================================================================
@@ -35,10 +35,12 @@ Viewport.prototype.constructor = Viewport;
 // the threejs camera's properties to match the new size
 Viewport.prototype.resize = function( width, height ) {
     
-    this.width = width;
-    this.height = height;
+    this.width = width * theConfig.video.resolutionMultiplier;
+    this.height = height * theConfig.video.resolutionMultiplier;
     
     this.renderer.setSize( this.width, this.height );
+    this.renderer.domElement.style.width = "100%";
+    this.renderer.domElement.style.height = "100%";
     
     if ( theCamera !== undefined ) {
         theCamera.resize( width, height );
