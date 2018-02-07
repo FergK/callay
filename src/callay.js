@@ -79,6 +79,7 @@ var pointInWorld = function( event ) {
 	
 };
 
+// Legacy controls for free flight
 // var theKeyboardControls = new KeyboardControls();
 // theKeyboardControls.addKeyBind( 'w', null, null, function(){ theCamera.move( new THREE.Vector3().copy( Y_AXIS ) ) }, null, null );
 // theKeyboardControls.addKeyBind( 'a', null, null, function(){ theCamera.move( new THREE.Vector3().copy( X_AXIS_NEG ) ) }, null, null );
@@ -104,12 +105,12 @@ theGamepadControls.addButtonBind( 0, function(){ theCamera.initialize() }, null,
 theGamepadControls.addAnalogBind( 6, function( value ){ theCamera.zoom( value ) } );
 theGamepadControls.addAnalogBind( 7, function( value ){ theCamera.zoom( -value ) } );
 
-var theGamepadControls = new KeyboardControls();
-theGamepadControls.addKeyBind( 'w', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( Y_AXIS ) ) }, null, null );
-theGamepadControls.addKeyBind( 'a', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( X_AXIS_NEG ) ) }, null, null );
-theGamepadControls.addKeyBind( 's', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( Y_AXIS_NEG ) ) }, null, null );
-theGamepadControls.addKeyBind( 'd', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( X_AXIS ) ) }, null, null );
-theGamepadControls.addKeyBind( 'p', null, null, function(){ cancelAnimationFrame( theAnimationRequest );  }, null, null );
+// var theGamepadControls = new KeyboardControls();
+// theGamepadControls.addKeyBind( 'w', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( Y_AXIS ) ) }, null, null );
+// theGamepadControls.addKeyBind( 'a', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( X_AXIS_NEG ) ) }, null, null );
+// theGamepadControls.addKeyBind( 's', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( Y_AXIS_NEG ) ) }, null, null );
+// theGamepadControls.addKeyBind( 'd', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( X_AXIS ) ) }, null, null );
+// theGamepadControls.addKeyBind( 'p', null, null, function(){ cancelAnimationFrame( theAnimationRequest );  }, null, null );
 
 var theKeyboardControls = new KeyboardControls();
 theKeyboardControls.addKeyBind( 'w', null, null, function(){ thePlayer.move( new THREE.Vector3().copy( Y_AXIS ) ) }, null, null );
@@ -123,7 +124,8 @@ theMouseControls.addButtonBind( 2, function(){ theMouseControls.requestPointerLo
 theMouseControls.addPointerBind( function( event ){ thePlayer.mouseLook( event ) } );
 // theMouseControls.addPointerBind( function( event ){ thePlayer.mouseLook( event ); pointInWorld(); } );
 
-var theControls = new Controls( theKeyboardControls, theMouseControls, theGamepadControls );
+// var theControls = new Controls( theKeyboardControls, theMouseControls, theGamepadControls );
+var theControls = new Controls( theKeyboardControls, theMouseControls );
 
 var theAnimationRequest;
 function render() {
