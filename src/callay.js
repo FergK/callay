@@ -125,7 +125,7 @@ theMouseControls.addPointerBind( function( event ){ thePlayer.mouseLook( event )
 // theMouseControls.addPointerBind( function( event ){ thePlayer.mouseLook( event ); pointInWorld(); } );
 
 // var theControls = new Controls( theKeyboardControls, theMouseControls, theGamepadControls );
-var theControls = new Controls( theKeyboardControls, theMouseControls );
+var theControls = new Controls( theKeyboardControls, theMouseControls, null );
 
 var theAnimationRequest;
 function render() {
