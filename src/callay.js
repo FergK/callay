@@ -40,7 +40,6 @@ var theViewport = new Viewport( "viewport", theConfig.video.enableAntiAliasing, 
 
 var theWorld = new World();
 theWorld.buildChunkAndNeighbors( 0, 0, 15 );
-// console.log( theWorld.chunks[0][0] );
 
 // var axisHelper = new THREE.AxisHelper( 2 );
 // axisHelper.position.set( 0, 0, 3 );
@@ -48,20 +47,13 @@ theWorld.buildChunkAndNeighbors( 0, 0, 15 );
 
 var thePlayer = new Player();
 
-// var anEntity = new Entity( new THREE.Vector3(0, -5, 10 ) );
-// var aPip = new Pip( new THREE.Vector3( 0, 5, 30 ) );
-
-
 // Cameras =====================================================================
 
 // var theCamera = new OrthoCamera();
-
 // var theCamera = new FreeCamera();
 // theCamera.initialize();
 
 var theCamera = new FirstPersonCamera( thePlayer, thePlayer.eyeOffset );
-
-// console.log( theCamera.camera );
 
 // Controls ====================================================================
 
@@ -146,8 +138,6 @@ function render() {
     theWorld.manageChunks( theCamera.camera, 16, 7, 9 );
     
     theControls.update();
-    
-    // aPip.update();
     
     thePlayer.update();
     

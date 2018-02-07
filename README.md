@@ -6,7 +6,7 @@
 
 [GitHub](https://github.com/FergK/callay)
 
-An experiment with [ThreeJS](https://github.com/mrdoob/three.js/) to do abstract terrain generation from noise functions.
+An experiment with [ThreeJS](https://github.com/mrdoob/three.js/) to do abstract terrain generation using noise functions.
 
 #### Goals
 
