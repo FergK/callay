@@ -15,7 +15,7 @@ function FirstPersonCamera ( target, eyeOffset ) {
         this.FOV, // Field of view
         theViewport.width / theViewport.height, // Aspect ratio
         0.01, // Near
-        500 // Far
+        250 // Far
     );
 
     this.camera.rotation.order = 'ZYX';
@@ -40,16 +40,22 @@ FirstPersonCamera.prototype.setFOV = function ( FOV ) {
 // Called every frame
 FirstPersonCamera.prototype.update = function() {
 
-    this.camera.position.x = this.target.mesh.position.x;
-    this.camera.position.y = this.target.mesh.position.y;
-    this.camera.position.z = this.target.mesh.position.z + this.eyeOffset;
+    this.camera.position.x = this.target.position.x;
+    this.camera.position.y = this.target.position.y;
+    this.camera.position.z = this.target.position.z + this.eyeOffset;
 
     this.camera.rotation.z = this.target.rotation.z;
-    this.camera.rotation.x = this.target.rotation.x + (0.5 * Math.PI);
+    this.camera.rotation.x = this.target.rotation.x + ( Math.PI / 2 );
 
 };
 
-FirstPersonCamera.prototype.resize = function () {};
+// Resize ======================================================================
+FirstPersonCamera.prototype.resize = function () {
+
+    this.camera.aspect = theViewport.width / theViewport.height;
+    this.camera.updateProjectionMatrix();
+    
+};
 
 
 
@@ -70,7 +76,7 @@ function FreeCamera() {
 
     this.camera.rotation.order = 'ZYX';
 
-    theScene.add(this.camera);
+    theScene.add( this.camera );
     
     this.moveSpeed = 100;//25; // meters per second
     this.turnSpeed = Math.PI / 2; // radians per second
@@ -161,15 +167,16 @@ FreeCamera.prototype.mouseLook = function ( event ) {
         event.movementX * -0.05 * theTimeDelta * theConfig.mouse.lookSensitivity
     );
 
+    // TODO use quaternions or eulers directly here
     this.camera.rotation.setFromVector3( this.camera.rotation.toVector3().add( rotationVector ), 'ZYX' );
 
     // Clamp up/down rotation so you can't go around backwards
     var min = 0;
     var max = Math.PI;
-    if (this.camera.rotation.x < min) {
+    if ( this.camera.rotation.x < min ) {
         this.camera.rotation.x = min;
     }
-    if (this.camera.rotation.x > max) {
+    if ( this.camera.rotation.x > max ) {
         this.camera.rotation.x = max;
     }
 
@@ -237,7 +244,7 @@ OrthoCamera.prototype.update = function () {};
 
 OrthoCamera.prototype.initialize = function () {
     
-    this.setScale( 10 );
+    this.setScale( 20 );//10
     this.camera.position.set( 0, 0, 0 );
     this.camera.rotation.z = -Math.PI / 4;
     this.camera.rotation.x = Math.atan( 1 / Math.sqrt( 2 ) );

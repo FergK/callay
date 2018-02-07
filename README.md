@@ -1,20 +1,23 @@
 # Callay
 
-[Current Working Version](http://fergk.com/callay/001/001index.html)
+![Callay Screenshot](http://fergk.github.io/callay/screenshot.png)
+
+## [Latest Working Version](http://fergk.github.io/callay/)
+
 [GitHub](https://github.com/FergK/callay)
 
-An experiment with [ThreeJS](#threejs). I don't know what this is yet.
+An experiment with [ThreeJS](https://github.com/mrdoob/three.js/) to do abstract terrain generation from noise functions.
 
 #### Goals
 
-##### [Version 000](http://fergk.com/callay/000/000index.html)
+##### Version 000
 
 - **Rendering framework**
   - [x] Viewport
   - [x] Rendering loop
   - [x] Cuboidal geometry
 
-##### [Version 001](http://fergk.com/callay/001/001index.html)
+##### Version 001
 
 - **Cameras**
   - [x] Perspective camera with free movement
@@ -26,25 +29,30 @@ An experiment with [ThreeJS](#threejs). I don't know what this is yet.
 - [x] Now fetches ThreeJS from a CDN
 - [x] Noise-based geometry generation
 
-##### [Version 002](http://fergk.com/callay/001/001index.html)
+##### Version 002
 
+- **Boring Stuff**
+- [x] Get rid of versioning in files and use git properly
+- [ ] Clean up the main file
 - **Basic UI**
   - [ ] Introduction
   - [ ] FPS display
   - [ ] Information about controls
   - [ ] Browser feature error messages (WebGL, pointer lock, gamepad, etc...)
-  - [ ] De-uglify fonts
+  - [ ] Simple options (half-size rendering)
 - **Interaction**
+  - [x] Rudimentary first person camera
+  - [x] Player object with terrain collision detection
   - [ ] User alterable geometry and geometry color
-- [x] Smoothed geometry option
-- [x] Pseudo-infinite terrain
-- [x] Get rid of versioning in files and use git properly (maybe?)
-- [ ] Clean up the main file
+- [x] Smoothed geometry option with appropriate normals for lighting
+- [x] Pseudo-infinite terrain generation using simplex noise
+- [x] Set up on github.io: [fergk.github.io/callay](http://fergk.github.io/callay/)
+- [x] Added [Logify.js](http://futurecensus.github.io/logify.js/) to aid with debugging
+- [x] Added [seedrandom](ttps://github.com/davidbau/seedrandom) for seeded terrain generation
+
 
 ##### Future
-- [ ] Collision detection with terrain
+- [ ] Look into using typed arrays and BufferGeometry for performance
 
 ##### TODOs
 - Pointer lock is broken in firefox
-
-https://guides.github.com/features/mastering-markdown/
