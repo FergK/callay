@@ -251,65 +251,65 @@ GamepadControls.prototype.removeEventListeners = function() {};
 // Called each frame. Used necessary for eachframe, whileup, and whiledown bindings
 GamepadControls.prototype.update = function() {
     
-    this.gamepads = navigator.getGamepads();
-    // console.log( this.gamepads );
+    // this.gamepads = navigator.getGamepads();
+    // // console.log( this.gamepads );
 
-    // Find the first connected gamepad, if any
-    for( var i = 0; i < 4; i++ ) {
-        if ( this.gamepads[i] !== undefined ) {
-            this.gamepad = this.gamepads[i];
-            break;
-        }
-    }
+    // // Find the first connected gamepad, if any
+    // for( var i = 0; i < 4; i++ ) {
+    //     if ( this.gamepads[i] !== undefined ) {
+    //         this.gamepad = this.gamepads[i];
+    //         break;
+    //     }
+    // }
     
-    // If no gamepad is connected, we can't do anything.
-    if ( i >= 4 ) { return false; }
+    // // If no gamepad is connected, we can't do anything.
+    // if ( i >= 4 ) { return false; }
     
-    // Handle the axes
-    for( i = 0; i < this.gamepad.axes.length; i++ ) {
-        // console.log( this.gamepad.axes );
-        var value = this.gamepad.axes[i];
+    // // Handle the axes
+    // for( i = 0; i < this.gamepad.axes.length; i++ ) {
+    //     // console.log( this.gamepad.axes );
+    //     var value = this.gamepad.axes[i];
         
-        // Implement the deadzone and scale the result from 0 - 1.0
-        if ( ( value > -this.axisDeadzone ) && ( value < this.axisDeadzone ) ) {
-            value = 0;
-        } else if ( value > this.axisDeadzone ) {
-            value = ( value - this.axisDeadzone ) * ( 1 / ( 1 - this.axisDeadzone) );
-        } else if ( value < -this.axisDeadzone ) {
-            value = ( value + this.axisDeadzone ) * ( 1 / ( 1 - this.axisDeadzone) );
-        }
+    //     // Implement the deadzone and scale the result from 0 - 1.0
+    //     if ( ( value > -this.axisDeadzone ) && ( value < this.axisDeadzone ) ) {
+    //         value = 0;
+    //     } else if ( value > this.axisDeadzone ) {
+    //         value = ( value - this.axisDeadzone ) * ( 1 / ( 1 - this.axisDeadzone) );
+    //     } else if ( value < -this.axisDeadzone ) {
+    //         value = ( value + this.axisDeadzone ) * ( 1 / ( 1 - this.axisDeadzone) );
+    //     }
         
-        if ( this.axisBinds[i] !== undefined ) {
-            // console.log( value );
-            this.axisBinds[i]( value );
-        }
-    }
+    //     if ( this.axisBinds[i] !== undefined ) {
+    //         // console.log( value );
+    //         this.axisBinds[i]( value );
+    //     }
+    // }
     
-    // Handle the analog buttons
-    for ( var button in this.analogButtonBinds ) {
+    // // Handle the analog buttons
+    // for ( var button in this.analogButtonBinds ) {
         
-        value = this.gamepad.buttons[button].value;
+    //     value = this.gamepad.buttons[button].value;
         
-        // Implement the deadzone and scale the result from 0 - 1.0
-        if ( ( value > -this.analogDeadzone ) && ( value < this.analogDeadzone ) ) {
-            value = 0;
-        } else if ( value > this.analogDeadzone ) {
-            value = ( value - this.analogDeadzone ) * ( 1 / ( 1 - this.analogDeadzone) );
-        } else if ( value < -this.analogDeadzone ) {
-            value = ( value + this.analogDeadzone ) * ( 1 / ( 1 - this.analogDeadzone) );
-        }
+    //     // Implement the deadzone and scale the result from 0 - 1.0
+    //     if ( ( value > -this.analogDeadzone ) && ( value < this.analogDeadzone ) ) {
+    //         value = 0;
+    //     } else if ( value > this.analogDeadzone ) {
+    //         value = ( value - this.analogDeadzone ) * ( 1 / ( 1 - this.analogDeadzone) );
+    //     } else if ( value < -this.analogDeadzone ) {
+    //         value = ( value + this.analogDeadzone ) * ( 1 / ( 1 - this.analogDeadzone) );
+    //     }
         
-        if ( this.analogButtonBinds[button] !== undefined ) {
-            this.analogButtonBinds[button]( value );
-        }
+    //     if ( this.analogButtonBinds[button] !== undefined ) {
+    //         this.analogButtonBinds[button]( value );
+    //     }
         
-    }
+    // }
     
-    // Loop through each of the button binds
-    // It will know it if is pressed or not and what functions to call.
-    for ( var button in this.buttonBinds ) {
-        this.buttonBinds[button].update( this.gamepad.buttons[button].value, this.buttonThreshold );
-    }
+    // // Loop through each of the button binds
+    // // It will know it if is pressed or not and what functions to call.
+    // for ( var button in this.buttonBinds ) {
+    //     this.buttonBinds[button].update( this.gamepad.buttons[button].value, this.buttonThreshold );
+    // }
 
 };
 
